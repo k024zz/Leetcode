@@ -1,0 +1,77 @@
+class Solution {
+public:
+    int calculate(string s) {
+        //init priority
+        priority["+"] = 1;
+        priority["-"] = 1;
+        priority["*"] = 2;
+        priority["/"] = 2;
+        
+        //divide string into strings
+        vector<string> inorder;
+        string temp = "";
+        for(int i=0; i<s.length(); i++) {
+            if(s[i] == ' ') continue;
+            temp = s[i];
+            if(isNumber(s[i])) {
+                while(i+1<s.length() && isNumber(s[i+1])) {
+                    temp += s[++i];
+                }
+            }
+            inorder.push_back(temp);
+        }
+        
+        // convert inorder to postorder
+        stack<string> operators;
+        vector<string> postorder;
+        for( auto str : inorder ) {
+            if( isNumber(str[0]) ) {
+                postorder.push_back(str);
+            } else {
+                while(!operators.empty() && priority[operators.top()] >= priority[str]) {
+                    postorder.push_back(operators.top());
+                    operators.pop();
+                }
+                operators.push(str);
+            }
+        }
+        while(!operators.empty()) {
+            postorder.push_back(operators.top());
+            operators.pop();
+        }
+        
+        //calculate
+        stack<int> num;
+        for(auto str : postorder) {
+            if(isNumber(str[0])) {
+                num.push(stoi(str));
+            } else {
+                int b = num.top();
+                num.pop();
+                int a = num.top();
+                num.pop();
+                if(str == "+") {
+                    num.push(a+b);
+                } else if(str == "-") {
+                    num.push(a-b);
+                } else if(str == "*") {
+                    num.push(a*b);
+                } else {
+                    num.push(a/b);
+                }
+            }
+        }
+        return num.top();
+    }
+    
+private:
+    bool isNumber(char c) {
+        if(c<='9' && c>='0') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    map<string, int> priority;
+};
