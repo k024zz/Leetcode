@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        int min = 1; 
+        int max = nums.size()-1;
+        while(min < max) {
+            int mid = (min+max)>>1;
+            if(countLessThan(nums, mid) <= mid) {
+                min = mid+1;
+            } else {
+                max = mid;
+            }
+        }
+        return min;
+    }
+    
+private:
+    int countLessThan(vector<int>& nums, int n) {
+        int count = 0;
+        for( auto i : nums ) {
+            if(i <= n) {
+                count++;
+            }
+        }
+        return count;
+    }
+};
