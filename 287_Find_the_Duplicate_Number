@@ -26,3 +26,4 @@ private:
     }
 };
 
+The run time is O(nlogn).
