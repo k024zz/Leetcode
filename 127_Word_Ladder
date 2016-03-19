@@ -1,0 +1,29 @@
+ass Solution {
+public:
+    int ladderLength(string beginWord, string endWord, unordered_set<string>& wordList) {
+        queue<pair<string, int>> visiting;
+        visiting.push({beginWord, 1});
+        wordList.erase(beginWord);
+        while(!visiting.empty()) {
+            auto p = visiting.front();
+            visiting.pop();
+            string word = p.first;
+            if(word == endWord) {
+                return p.second;
+            }
+            int nextStep = p.second + 1;
+            for(int i=0; i<word.length(); i++) {
+                for(int c=0; c<26; c++) {
+                    string nextWord = word;
+                    nextWord[i] = 'a' + c;
+                    if(wordList.find(nextWord) != wordList.end()) {
+                        visiting.push({nextWord, nextStep});
+                        wordList.erase(nextWord);
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+    
+};

@@ -1,0 +1,30 @@
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        if(s+p == "") return true;
+        if(p == "" || p[0] == '*') return false;
+        matched = false;
+        DFS(s, p, 0, 0);
+        return matched;
+    }
+    
+private:
+    bool matched;
+    void DFS(string& s, string& p, int si, int pi) {
+        if(si == s.length() && pi == p.length() && !matched) {
+            matched = true;
+        } else if(si <= s.length() && pi < p.length()) {
+            if(pi+1 < p.length() && p[pi+1] == '*') {
+                // match 0 charater
+                DFS(s, p, si, pi+2);
+                while(si < s.length() && (p[pi] == '.' || s[si] == p[pi])) {
+                    DFS(s, p, ++si, pi+2);
+                }
+            } else {
+                if(p[pi] == '.' || s[si] == p[pi]) {
+                    DFS(s, p, si+1, pi+1);
+                }
+            }
+        }
+    }
+};
