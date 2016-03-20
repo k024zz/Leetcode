@@ -1,0 +1,82 @@
+ass Solution {
+public:
+    vector<vector<string>> findLadders(string beginWord, string endWord, unordered_set<string> &wordList) {
+        this->beginWord = beginWord;
+        this->endWord = endWord;
+        minFromBegin = INT_MAX;
+        pathMap[beginWord] = vector<vector<string>>(1, vector<string>(1, beginWord));
+        pathMap[endWord] = vector<vector<string>>(1, vector<string>(1, endWord));
+        queue<string> visiting;
+        visiting.push(beginWord);
+        visiting.push(endWord);
+        // two ends BFS
+        while(!visiting.empty()) {
+            string curWord = visiting.front();
+            visiting.pop();
+            for(int i=0; i<curWord.length(); i++) {
+                string nextWord = curWord;
+                for(int c=0; c<26; c++) {
+                    nextWord[i] = 'a' + c;
+                    if(wordList.find(nextWord) == wordList.end()) continue;
+                    if(pathMap.find(nextWord) == pathMap.end()) {
+                        addPath(curWord, nextWord);
+                        visiting.push(nextWord);
+                    } else if(pathMap[nextWord][0][0] == pathMap[curWord][0][0] ) {
+                        // same length path from the same source
+                        if(pathMap[nextWord][0].size() == pathMap[curWord][0].size()+1) {
+                            addPath(curWord, nextWord);
+                        }
+                    } else if(pathMap[nextWord][0][0] == beginWord) {
+                        //get result
+                        addResult(curWord, nextWord);
+                    } else {
+                        // a node from begin meet a node from end
+                        minFromBegin = pathMap[curWord][0].size();
+                        i = curWord.length();
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    
+private:
+    string beginWord, endWord;
+    unordered_map<string, vector<vector<string>>> pathMap;
+    vector<vector<string>> result;
+    int minFromBegin;
+    
+    void addPath(string curWord, string nextWord) {
+        auto nextPaths = pathMap[curWord];
+        if(pathMap.find(nextWord) == pathMap.end()) {
+            for(int i=0; i<nextPaths.size(); i++) {
+                nextPaths[i].push_back(nextWord);
+            }
+            //debug
+            //printVecs(nextPaths);
+            pathMap[nextWord] = nextPaths;
+        } else {
+            for(auto vec : nextPaths) {
+                vec.push_back(nextWord);
+                pathMap[nextWord].push_back(vec);
+            }
+        }
+    }
+    
+    void addResult(string curWord, string nextWord) {
+        if(pathMap[nextWord][0].size() > minFromBegin) return;
+        //if(pathMap[curWord][0][0] == endWord && pathMap[endWord][0][0] == beginWord) {
+        for(auto curVec : pathMap[curWord]) {
+            auto curVecR = curVec;
+            reverse(curVecR.begin(), curVecR.end());
+            for(auto nextVec : pathMap[nextWord]) {
+                auto vec = nextVec;
+                vec.insert(vec.end(), curVecR.begin(), curVecR.end());
+                if(!result.empty() && vec.size() > result[0].size()) return;
+                result.push_back(vec);
+            }
+        }
+        //}
+    }
+};
