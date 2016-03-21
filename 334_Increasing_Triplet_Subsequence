@@ -1,0 +1,32 @@
+class Solution {
+public:
+    bool increasingTriplet(vector<int>& nums) {
+        if(nums.size() < 3) return false; 
+        int cur1, cur2, pre1;
+        int length = 1;
+        cur1 = pre1 = nums[0];
+        for(int i=1; i<nums.size(); i++) {
+            if(length == 1) {
+                if(nums[i] <= cur1) {
+                    cur1 = nums[i];
+                    pre1 = nums[i];
+                } else {
+                    cur2 = nums[i];
+                    length++;
+                }
+            } else {
+                if(nums[i] > cur2) {
+                    return true;
+                } else if(nums[i] > pre1) {
+                    cur1 = pre1;
+                    cur2 = nums[i];
+                } else if(nums[i] < pre1) {
+                    pre1 = nums[i];
+                }
+            }
+        }
+        return false;
+    }
+};
+
+O(n) run time and O(1) space.
