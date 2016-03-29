@@ -1,0 +1,37 @@
+class Solution {
+public:
+    vector<vector<string>> partition(string s) {
+        vector<string> sol;
+        DFS(s, 0, sol);
+        return result;
+    }
+    
+private:
+    vector<vector<string>> result;
+    void DFS(string& s, int index, vector<string>& sol) {
+        if(index == s.length()) {
+            result.push_back(sol);
+        } else {
+            for(int i=index+1; i<=s.length(); i++) {
+                string temp = s.substr(index, i-index);
+                if(palindrome(temp)) {
+                    sol.push_back(temp);
+                    DFS(s, i, sol);
+                    sol.pop_back();
+                }
+            }
+        }
+    }
+
+    bool palindrome(string& str) {
+        int begin = 0, end = str.length()-1;
+        while(begin < end) {
+            if(str[begin++] != str[end--]) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+The time complexity is O(n*n!).
