@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        int N = nums.size();
+        vector<int> minStep(N, INT_MAX);
+        minStep[0] = 0;
+        int cur = 1;
+        for(int i=0; i<N-1; i++) {
+            int jump = i + nums[i];
+            while(cur <= jump && cur < N) {
+                minStep[cur] = min(minStep[cur], minStep[i]+1);
+                cur++;
+            }
+        }
+        return minStep[N-1];
+    }
+};
