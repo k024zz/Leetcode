@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int minPatches(vector<int>& nums, int n) {
+        long sum = 0;
+        int curi = 0;
+        int patch = 0;
+        while(sum < n) {
+            int need = sum + 1;
+            if(curi<nums.size() && nums[curi] <= need) {
+                sum += nums[curi];
+                curi++;
+            } else {
+                sum += need;
+                patch++;
+            }
+        }
+        return patch;
+    }
+};
