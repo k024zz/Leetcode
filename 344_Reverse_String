@@ -1,0 +1,14 @@
+class Solution {
+public:
+    string reverseString(string s) {
+        if(s.length() == 0) {
+            return s;
+        }
+        int begin = 0;
+        int end = s.length()-1;
+        while(begin < end) {
+            swap(s[begin++], s[end--]);
+        }
+        return s;
+    }
+};
